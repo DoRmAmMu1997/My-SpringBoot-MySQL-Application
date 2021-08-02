@@ -3,8 +3,15 @@ package com.hemant.db.resource;
 import com.hemant.db.model.Department;
 import com.hemant.db.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/rest/Department")
@@ -19,40 +26,56 @@ public class DepartmentResource {
     }
 
     @PostMapping(value = "/insert")
-    public List<Department> persist(@RequestBody final Department Department) {
-        DepartmentRepository.save(Department);
-        return DepartmentRepository.findAll();
+    public ResponseEntity<String> persist(@Valid @RequestBody final Department Department) {
+	    DepartmentRepository.save(Department);
+	    return ResponseEntity.ok("Success");
     }
     
     @GetMapping("/findbyname")
-    public List<Department> fetchDataByName(@RequestParam("name") String name){        
+    public List<Department> fetchDataByName(@Valid @RequestParam("name") String name){        
         return DepartmentRepository.findByName(name);
     }
     
     @GetMapping("/findbyaddress")
-    public List<Department> fetchDataByDesignation(@RequestParam("address") String address){        
+    public List<Department> fetchDataByAddress(@Valid @RequestParam("address") String address){        
         return DepartmentRepository.findByAddress(address);
     }
     
     @PostMapping("/updatefloor")
-    public List<Department> updateFloor(@RequestParam("Id") Integer Id, @RequestParam("floor") Integer floor) {
-    	Department d = DepartmentRepository.findById(Id).get();
-    	d.setfloor(floor);
-    	DepartmentRepository.save(d);
-    	return DepartmentRepository.findAll();
+    public ResponseEntity<String> updateFloor(@RequestParam("Id") Integer Id, @Valid @RequestParam("floor") Integer floor) {
+	    Department d = DepartmentRepository.findById(Id).get();
+	    d.setfloor(floor);
+	    DepartmentRepository.save(d);
+	    return ResponseEntity.ok("Success");
     }
     
     @PostMapping("/updateaddress")
-    public List<Department> updateAddress(@RequestParam("Id") Integer Id, @RequestParam("address") String address) {
-    	Department d = DepartmentRepository.findById(Id).get();
-    	d.setaddress(address);
-    	DepartmentRepository.save(d);
-    	return DepartmentRepository.findAll();
+    public ResponseEntity<String> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address") String address) {
+	    Department d = DepartmentRepository.findById(Id).get();
+	    d.setaddress(address);
+	    DepartmentRepository.save(d);
+	    return ResponseEntity.ok("Success");
     }
     
     @DeleteMapping("/delete")
-    public List<Department> deleteDepartment(@RequestParam("Id") Integer Id){
-    	DepartmentRepository.deleteById(Id);
-    	return DepartmentRepository.findAll();
+    public ResponseEntity<String> deleteDepartment(@RequestParam("Id") Integer Id){
+    	try {
+	    	DepartmentRepository.deleteById(Id);
+		    return ResponseEntity.ok("Success");
+	    } catch(Exception e) {
+	    	return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+	    }
+    }
+    
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
