@@ -4,27 +4,37 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.*;
 
 @Entity
 public class Address {
-	  @Id
+	@Id
     @GeneratedValue
     @Column(name = "Add_ID")
     private Integer Id;
-    @Column(name = "Address1")
-    private String address1;
-    @Column(name = "Address2")
-    private String address2;
-    @Column(name = "City")
-    private String city;
-    @Column(name = "State")
-    private String state;
-    @Column(name = "PIN")
-    private Integer pin;
-    @Column(name = "Emp_ID")
-    private Integer empId;
-	  @Column(name = "Created_By")
+	@NotBlank
+	@Column(name = "Address1")
+	private String address1;
+	@NotBlank
+	@Column(name = "Address2")
+	private String address2;
+	@NotBlank
+	@Column(name = "City")
+	private String city;
+	@NotBlank
+	@Column(name = "State")
+	private String state;
+	@Min(value = 100000)
+	@Max(value = 999999)
+	@NotNull
+	@Column(name = "PIN")
+	private Integer pin;
+	@Column(name = "Emp_ID")
+	private Integer empId;
+	@NotBlank
+	@Column(name = "Created_By")
     private String createdBy;
+	@NotBlank
     @Column(name = "Created_At")
     private String createdAt;
     @Column(name = "Updated_By")
