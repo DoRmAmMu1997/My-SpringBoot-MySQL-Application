@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.*;
 
 @Entity
 public class Department {
@@ -11,14 +12,20 @@ public class Department {
     @GeneratedValue
     @Column(name = "Dep_ID")
     private Integer Id;
+    @NotBlank
     @Column(name = "Name")
     private String name;
+    @NotBlank
     @Column(name = "Address")
     private String address;
+    @NotNull
+    @Max(value = 200)
     @Column(name = "Floor")
     private Integer floor;
+    @NotBlank
     @Column(name = "Created_By")
     private String createdBy;
+    @NotBlank
     @Column(name = "Created_At")
     private String createdAt;
     @Column(name = "Updated_By")
