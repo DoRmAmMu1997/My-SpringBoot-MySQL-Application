@@ -133,5 +133,3 @@ public class Address {
     	this.updatedAt = updatedAt;
     }
 }
-
-
