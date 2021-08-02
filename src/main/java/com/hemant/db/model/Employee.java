@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.*;
 
 @Entity
 public class Employee {
@@ -12,21 +13,36 @@ public class Employee {
     @Column(name = "Emp_ID")
     private Integer Id;
     @Column(name = "Name")
+    @NotNull
     private String name;
+    @NotNull
     @Column(name = "Designation")
     private String designation;
+    @NotNull
+    @Min(value = 25000)
     @Column(name = "Salary")
     private Integer salary;
+    @NotNull
     @Column(name = "Dep_ID")
     private Integer depId;
+    @NotNull
+    @Min(value = (long)7e9)
+    @Max(value = (long)1e10 - 1)
     @Column(name = "Mobile")
     private long mobile;
+    @NotNull
+    @Email
     @Column(name = "EMail")
     private String email;
+    @NotNull
     @Column(name = "Password")
     private String password;
+    @Column(name = "Status")
+    private String status;
+    @NotNull
     @Column(name = "Created_By")
     private String createdBy;
+    @NotNull
     @Column(name = "Created_At")
     private String createdAt;
     @Column(name = "Updated_By")
@@ -99,6 +115,14 @@ public class Employee {
     
     public void setPassword(String password) {
     	this.password = password;
+    }
+    
+    public String getStatus() {
+    	return status;
+    }
+    
+    public void setStatus(String status) {
+    	this.status = status;
     }
     
     public String getCreatedBy() {
