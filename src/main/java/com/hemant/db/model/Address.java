@@ -5,13 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
+import com.hemant.db.validators.IsInteger;
 
 @Entity
 public class Address {
 	@Id
-    @GeneratedValue
-    @Column(name = "Add_ID")
-    private Integer Id;
+        @GeneratedValue
+        @Column(name = "Add_ID")
+        private Integer Id;
 	@NotBlank
 	@Column(name = "Address1")
 	private String address1;
@@ -26,6 +27,7 @@ public class Address {
 	private String state;
 	@Min(value = 100000)
 	@Max(value = 999999)
+	@IsInteger
 	@NotNull
 	@Column(name = "PIN")
 	private Integer pin;
@@ -33,14 +35,14 @@ public class Address {
 	private Integer empId;
 	@NotBlank
 	@Column(name = "Created_By")
-    private String createdBy;
+        private String createdBy;
 	@NotBlank
-    @Column(name = "Created_At")
-    private String createdAt;
-    @Column(name = "Updated_By")
-    private String updatedBy;
-    @Column(name = "Updated_At")
-    private String updatedAt;
+        @Column(name = "Created_At")
+        private String createdAt;
+        @Column(name = "Updated_By")
+        private String updatedBy;
+        @Column(name = "Updated_At")
+        private String updatedAt;
     
     public Address() {
     }
