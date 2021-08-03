@@ -5,11 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
+import com.hemant.db.validators.IsInteger;
+import com.hemant.db.validators.IsLong;
 
 @Entity
 public class Employee {
     @Id
     @GeneratedValue
+    @IsInteger
     @Column(name = "Emp_ID")
     private Integer Id;
     @Column(name = "Name")
@@ -23,9 +26,11 @@ public class Employee {
     @Column(name = "Salary")
     private Integer salary;
     @NotNull
+    @IsInteger
     @Column(name = "Dep_ID")
     private Integer depId;
     @NotNull
+    @IsLong
     @Min(value = (long)7e9)
     @Max(value = (long)1e10 - 1)
     @Column(name = "Mobile")
@@ -39,6 +44,9 @@ public class Employee {
     private String password;
     @Column(name = "Status")
     private String status;
+    @NotNull
+    @Column(name = "Account_Status")
+    private String accountStatus;
     @NotNull
     @Column(name = "Created_By")
     private String createdBy;
@@ -123,6 +131,14 @@ public class Employee {
     
     public void setStatus(String status) {
     	this.status = status;
+    }
+    
+    public String getAccountStatus() {
+    	return accountStatus;
+    }
+    
+    public void setAccountStatus(String accountStatus) {
+    	this.accountStatus = accountStatus;
     }
     
     public String getCreatedBy() {
