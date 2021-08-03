@@ -26,9 +26,9 @@ public class AddressResource {
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<String> persist(@Valid @RequestBody final Address Address) {
+    public ResponseEntity<List<Address>> persist(@Valid @RequestBody final Address Address) {
 	    AddressRepository.save(Address);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(AddressRepository.findByEmp(Address.getEmpId()));
     }  
     
     @GetMapping(value = "/findbycity")
@@ -42,21 +42,21 @@ public class AddressResource {
     }
     
     @PostMapping("/updateaddress")
-    public ResponseEntity<String> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address1") String address1, @Valid @RequestParam("address2") String address2, @Valid @RequestParam("city") String city, @Valid @RequestParam("state") String state, @Valid @RequestParam("pin") Integer pin) {
+    public ResponseEntity<Address> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address1") String address1, @Valid @RequestParam("address2") String address2, @Valid @RequestParam("city") String city, @Valid @RequestParam("state") String state, @Valid @RequestParam("pin") Integer pin) {
 	    Address a = AddressRepository.findById(Id).get();
 	    a.setAddress1(address1); a.setAddress2(address2); a.setCity(city); a.setState(state); a.setPIN(pin);
 	    AddressRepository.save(a);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(a);
     }
     
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestParam("Id") Integer Id){
     	try {
 	    	AddressRepository.deleteById(Id);
-		    return ResponseEntity.ok("Success");
-	    } catch(Exception e) {
+		return ResponseEntity.ok("Success");
+	} catch(Exception e) {
 	    	return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-	    }
+	}
     }
     
     @ResponseStatus(HttpStatus.BAD_REQUEST)
