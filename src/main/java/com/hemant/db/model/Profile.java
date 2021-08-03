@@ -5,30 +5,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
+import com.hemant.db.validators.IsInteger;
 
 @Entity
 public class Profile {
-	@Id
-	@GeneratedValue
-	@Column(name = "Prof_ID")
-	private Integer Id;
-	@Size(max = 6)
-	@NotBlank
-	@Column(name = "Gender")
-	private String gender;
-	@NotBlank
-	@Column(name = "DOB")
-	private String dob;
-	@NotBlank
-	@Column(name = "Hobbies")
-	private String hobbies;
-	@NotNull
-	@Column(name = "Emp_ID")
-	private Integer empId;
+    @Id
+    @GeneratedValue
+    @IsInteger
+    @Column(name = "Prof_ID")
+    private Integer Id;
+    @Size(max = 6)
     @NotBlank
-	@Column(name = "Created_By")
+    @Column(name = "Gender")
+    private String gender;
+    @NotBlank
+    @Column(name = "DOB")
+    private String dob;
+    @NotBlank
+    @Column(name = "Hobbies")
+    private String hobbies;
+    @NotNull
+    @Column(name = "Emp_ID")
+    private Integer empId;
+    @NotBlank
+    @Column(name = "Created_By")
     private String createdBy;
-	@NotBlank
+    @NotBlank
     @Column(name = "Created_At")
     private String createdAt;
     @Column(name = "Updated_By")
