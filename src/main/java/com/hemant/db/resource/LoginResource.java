@@ -36,7 +36,7 @@ public class LoginResource {
 				if(password.equals(correctPassword)) {
 					e.setStatus("Logged In");
 					EmployeeRepository.save(e);
-					return new ResponseEntity<>("Logged In", HttpStatus.OK);
+					return new ResponseEntity<>("Logged In\nUsername: " + e.getEmail() + "\nName: " + e.getName(), HttpStatus.OK);
 				}
 				else {
 					return new ResponseEntity<>("Login Failure, Wrong email or password", HttpStatus.BAD_REQUEST);
