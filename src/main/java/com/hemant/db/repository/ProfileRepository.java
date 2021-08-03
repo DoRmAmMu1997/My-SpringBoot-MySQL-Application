@@ -17,7 +17,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Integer> {
     
     @Modifying
     @Query("update Profile p set p.hobbies = :hobbies where p.Id = :Id")
-    public List<Profile> updateDesignation(@Param("Id") Integer Id, @Param("hobbies") String hobbies);
+    public List<Profile> updateHobbies(@Param("Id") Integer Id, @Param("hobbies") String hobbies);
     
     @Modifying
     public void deleteById(@Param("Id") Integer Id);
