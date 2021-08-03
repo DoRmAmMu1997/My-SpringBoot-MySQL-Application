@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 public @interface IsLong {
-	String message() default "Should be a Long Integer";
+    String message() default "Should be a Long Integer";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
