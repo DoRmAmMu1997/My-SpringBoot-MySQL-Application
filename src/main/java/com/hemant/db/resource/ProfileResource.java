@@ -26,12 +26,12 @@ public class ProfileResource {
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<String> persist(@Valid @RequestBody final Profile Profile) {
+    public ResponseEntity<@Valid Profile> persist(@Valid @RequestBody final Profile Profile) {
     	try {
-	    ProfileRepository.save(Profile);
-	    return ResponseEntity.ok("Success");
+		ProfileRepository.save(Profile);
+		return ResponseEntity.ok(Profile);
     	} catch(Exception e) {
-    		return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+    		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     	}
     }
     
@@ -46,11 +46,11 @@ public class ProfileResource {
     }
     
     @PostMapping("/updatehobbies")
-    public ResponseEntity<String> updateHobbies(@RequestParam("Id") Integer Id, @Valid @RequestParam("hobbies") String hobbies) {
+    public ResponseEntity<Profile> updateHobbies(@RequestParam("Id") Integer Id, @Valid @RequestParam("hobbies") String hobbies) {
 	    Profile p = ProfileRepository.findById(Id).get();
 	    p.setHobbies(hobbies);
 	    ProfileRepository.save(p);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(p);
     }
     
     @DeleteMapping("/delete")
