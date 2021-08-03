@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 public @interface IsInteger {
-	String message() default "Should be an Integer";
+    String message() default "Should be an Integer";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
