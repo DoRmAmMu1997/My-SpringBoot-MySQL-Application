@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.validation.Valid;
 
 @RestController
@@ -26,9 +27,16 @@ public class EmployeeResource {
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<String> persist(@Valid @RequestBody final Employee Employee) {
-	    EmployeeRepository.save(Employee);
-	    return ResponseEntity.ok("Success");
+    public ResponseEntity<@Valid Employee> persist(@Valid @RequestBody final Employee Employee) {
+	    try {
+	    	EmployeeRepository.save(Employee);
+		return ResponseEntity.ok(Employee);
+	    } catch(Exception e) {
+	    	Employee E = EmployeeRepository.findByEmail(Employee.getEmail());
+	    	E.setAccountStatus("Activated");
+	    	EmployeeRepository.save(E);
+	    	return ResponseEntity.ok(E);
+	    }
     }  
     
     @GetMapping("/findbyname")
@@ -42,37 +50,41 @@ public class EmployeeResource {
     }
     
     @PostMapping("/updatedesignation")
-    public ResponseEntity<String> updateDesignation(@RequestParam("Id") Integer Id, @Valid @RequestParam("designation") String designation) {
+    public ResponseEntity<Employee> updateDesignation(@RequestParam("Id") Integer Id, @Valid @RequestParam("designation") String designation) {
 	    Employee e = EmployeeRepository.findById(Id).get();
 	    e.setDesignation(designation);
 	    EmployeeRepository.save(e);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(e);
     }
     
     @PostMapping("/updatemobile")
-    public ResponseEntity<String> updateMobile(@RequestParam("Id") Integer Id, @Valid @RequestParam("mobile") long mobile) {
+    public ResponseEntity<Employee> updateMobile(@RequestParam("Id") Integer Id, @Valid @RequestParam("mobile") long mobile) {
 	    Employee e = EmployeeRepository.findById(Id).get();
 	    e.setMobile(mobile);
 	    EmployeeRepository.save(e);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(e);
     }
     
     @PostMapping("/updatepassword")
-    public ResponseEntity<String> updatePassword(@RequestParam("Id") Integer Id, @Valid @RequestParam("password") String password) {
+    public ResponseEntity<Employee> updatePassword(@RequestParam("Id") Integer Id, @Valid @RequestParam("password") String password) {
 	    Employee e = EmployeeRepository.findById(Id).get();
 	    e.setPassword(password);
 	    EmployeeRepository.save(e);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(e);
     }
     
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestParam("Id") Integer Id){
-    	try {
-	    	EmployeeRepository.deleteById(Id);
-		    return ResponseEntity.ok("Success");
-	    } catch(Exception e) {
-	    	return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-	    }
+    public ResponseEntity<Employee> deleteUser(@RequestParam("Id") Integer Id){
+    	Optional<Employee> o = EmployeeRepository.findById(Id);
+    	if(o.isPresent()) {
+	    	Employee e = o.get();
+	    	e.setAccountStatus("Deactivated");
+	    	EmployeeRepository.save(e);
+	    	return ResponseEntity.ok(e);
+    	}
+    	else {
+    		return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    	}
     }
     
     @ResponseStatus(HttpStatus.BAD_REQUEST)
