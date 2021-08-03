@@ -26,9 +26,9 @@ public class DepartmentResource {
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<String> persist(@Valid @RequestBody final Department Department) {
+    public ResponseEntity<@Valid Department> persist(@Valid @RequestBody final Department Department) {
 	    DepartmentRepository.save(Department);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(Department);
     }
     
     @GetMapping("/findbyname")
@@ -42,29 +42,29 @@ public class DepartmentResource {
     }
     
     @PostMapping("/updatefloor")
-    public ResponseEntity<String> updateFloor(@RequestParam("Id") Integer Id, @Valid @RequestParam("floor") Integer floor) {
+    public ResponseEntity<Department> updateFloor(@RequestParam("Id") Integer Id, @Valid @RequestParam("floor") Integer floor) {
 	    Department d = DepartmentRepository.findById(Id).get();
 	    d.setfloor(floor);
 	    DepartmentRepository.save(d);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(d);
     }
     
     @PostMapping("/updateaddress")
-    public ResponseEntity<String> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address") String address) {
+    public ResponseEntity<Department> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address") String address) {
 	    Department d = DepartmentRepository.findById(Id).get();
 	    d.setaddress(address);
 	    DepartmentRepository.save(d);
-	    return ResponseEntity.ok("Success");
+	    return ResponseEntity.ok(d);
     }
     
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteDepartment(@RequestParam("Id") Integer Id){
     	try {
 	    	DepartmentRepository.deleteById(Id);
-		    return ResponseEntity.ok("Success");
-	    } catch(Exception e) {
+		return ResponseEntity.ok("Success");
+	} catch(Exception e) {
 	    	return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-	    }
+	}
     }
     
     @ResponseStatus(HttpStatus.BAD_REQUEST)
