@@ -11,7 +11,6 @@ import com.hemant.db.validators.IsInteger;
 public class Department {
     @Id
     @GeneratedValue
-    @IsInteger
     @Column(name = "Dep_ID")
     private Integer Id;
     @NotBlank
