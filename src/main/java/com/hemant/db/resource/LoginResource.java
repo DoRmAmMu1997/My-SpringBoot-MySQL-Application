@@ -2,6 +2,7 @@ package com.hemant.db.resource;
 
 import com.hemant.db.model.Employee;
 import com.hemant.db.repository.EmployeeRepository;
+import com.hemant.db.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -25,25 +26,34 @@ public class LoginResource {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@Valid @RequestParam("email") String email, @Valid @RequestParam("password") String password) {
+	public ResponseEntity<Response> login(@Valid @RequestParam("email") String email, @Valid @RequestParam("password") String password) {
+		Response r = new Response();
 		Employee e = EmployeeRepository.findByEmail(email);
 		try {
 			String correctPassword = e.getPassword();
 			if(e.getStatus().equals("Logged In")) {
-				return new ResponseEntity<>("Error: User Already logged in", HttpStatus.FORBIDDEN);
+				r.setStatus(false);
+				r.setEmployee(e);
+				return new ResponseEntity<>(r, HttpStatus.FORBIDDEN);
 			} 
 			else {
 				if(password.equals(correctPassword)) {
 					e.setStatus("Logged In");
 					EmployeeRepository.save(e);
-					return new ResponseEntity<>("Logged In\nUsername: " + e.getEmail() + "\nName: " + e.getName(), HttpStatus.OK);
+					r.setStatus(true);
+					r.setEmployee(e);
+					return new ResponseEntity<>(r, HttpStatus.OK);
 				}
 				else {
-					return new ResponseEntity<>("Login Failure, Wrong email or password", HttpStatus.BAD_REQUEST);
+					r.setStatus(false);
+					r.setMessage("Incorrect Email or Password");
+					return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch(Exception e1) {
-			return new ResponseEntity<>("Error:" + e1.getMessage(), HttpStatus.BAD_REQUEST);
+			r.setStatus(false);
+			r.setMessage("Something went wrong " + e1.getMessage());
+			return new ResponseEntity<>(r, HttpStatus.BAD_REQUEST);
 		}
 		
 	}
