@@ -12,7 +12,6 @@ import com.hemant.db.validators.IsLong;
 public class Employee {
     @Id
     @GeneratedValue
-    @IsInteger
     @Column(name = "Emp_ID")
     private Integer Id;
     @Column(name = "Name")
