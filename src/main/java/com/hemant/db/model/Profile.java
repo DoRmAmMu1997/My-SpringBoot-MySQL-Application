@@ -11,7 +11,6 @@ import com.hemant.db.validators.IsInteger;
 public class Profile {
     @Id
     @GeneratedValue
-    @IsInteger
     @Column(name = "Prof_ID")
     private Integer Id;
     @Size(max = 6)
@@ -24,6 +23,7 @@ public class Profile {
     @NotBlank
     @Column(name = "Hobbies")
     private String hobbies;
+    @IsInteger
     @NotNull
     @Column(name = "Emp_ID")
     private Integer empId;
