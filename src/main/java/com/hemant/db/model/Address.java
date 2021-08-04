@@ -31,6 +31,7 @@ public class Address {
 	@NotNull
 	@Column(name = "PIN")
 	private Integer pin;
+	@IsInteger
 	@Column(name = "Emp_ID")
 	private Integer empId;
 	@NotBlank
