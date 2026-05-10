@@ -1,73 +1,67 @@
 package com.hemant.db.resource;
 
-import com.hemant.db.model.Address;
-import com.hemant.db.repository.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hemant.db.model.Address;
+import com.hemant.db.service.AddressService;
+
+@Validated
 @RestController
 @RequestMapping(value = "/rest/Address")
 public class AddressResource {
-	
-	@Autowired
-    AddressRepository AddressRepository;
+    private final AddressService addressService;
+
+    public AddressResource(AddressService addressService) {
+        this.addressService = addressService;
+    }
 
     @GetMapping(value = "/all")
     public List<Address> getAll() {
-        return AddressRepository.findAll();
+        return addressService.getAllAddresses();
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<List<Address>> persist(@Valid @RequestBody final Address Address) {
-	    AddressRepository.save(Address);
-	    return ResponseEntity.ok(AddressRepository.findByEmp(Address.getEmpId()));
-    }  
-    
+    public ResponseEntity<List<Address>> persist(@Valid @RequestBody final Address address) {
+        return ResponseEntity.ok(addressService.createAddress(address));
+    }
+
     @GetMapping(value = "/findbycity")
-    public List<Address> fetchDataByCity(@Valid @RequestParam("city") String city) {
-    	return AddressRepository.findByCity(city);
+    public List<Address> fetchDataByCity(@RequestParam("city") @NotBlank String city) {
+        return addressService.findByCity(city);
     }
-    
+
     @GetMapping(value = "/findbystate")
-    public List<Address> fetchDataByState(@Valid @RequestParam("state") String state) {
-    	return AddressRepository.findByState(state);
+    public List<Address> fetchDataByState(@RequestParam("state") @NotBlank String state) {
+        return addressService.findByState(state);
     }
-    
+
     @PostMapping("/updateaddress")
-    public ResponseEntity<Address> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address1") String address1, @Valid @RequestParam("address2") String address2, @Valid @RequestParam("city") String city, @Valid @RequestParam("state") String state, @Valid @RequestParam("pin") Integer pin) {
-	    Address a = AddressRepository.findById(Id).get();
-	    a.setAddress1(address1); a.setAddress2(address2); a.setCity(city); a.setState(state); a.setPIN(pin);
-	    AddressRepository.save(a);
-	    return ResponseEntity.ok(a);
+    public ResponseEntity<Address> updateAddress(
+            @RequestParam("Id") Integer id,
+            @RequestParam("address1") @NotBlank String address1,
+            @RequestParam("address2") @NotBlank String address2,
+            @RequestParam("city") @NotBlank String city,
+            @RequestParam("state") @NotBlank String state,
+            @RequestParam("pin") Integer pin) {
+        return ResponseEntity.ok(addressService.updateAddress(id, address1, address2, city, state, pin));
     }
-    
+
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestParam("Id") Integer Id){
-    	try {
-	    	AddressRepository.deleteById(Id);
-		return ResponseEntity.ok("Success");
-	} catch(Exception e) {
-	    	return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-    }
-    
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
+    public ResponseEntity<String> deleteUser(@RequestParam("Id") Integer id) {
+        addressService.deleteAddress(id);
+        return ResponseEntity.ok("Success");
     }
 }

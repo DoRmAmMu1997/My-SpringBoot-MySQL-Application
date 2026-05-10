@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
-import com.hemant.db.validators.IsInteger;
 
 @Entity
 public class Profile {
@@ -23,7 +22,6 @@ public class Profile {
     @NotBlank
     @Column(name = "Hobbies")
     private String hobbies;
-    @IsInteger
     @NotNull
     @Column(name = "Emp_ID")
     private Integer empId;
@@ -75,6 +73,10 @@ public class Profile {
     
     public Integer getEmpId() {
         return empId;
+    }
+
+    public void setEmpId(Integer empId) {
+        this.empId = empId;
     }
 
     public void setDepId(Integer empId) {
