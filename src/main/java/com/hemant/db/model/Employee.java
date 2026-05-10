@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
-import com.hemant.db.validators.IsInteger;
-import com.hemant.db.validators.IsLong;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Employee {
@@ -25,11 +25,9 @@ public class Employee {
     @Column(name = "Salary")
     private Integer salary;
     @NotNull
-    @IsInteger
     @Column(name = "Dep_ID")
     private Integer depId;
     @NotNull
-    @IsLong
     @Min(value = (long)7e9)
     @Max(value = (long)1e10 - 1)
     @Column(name = "Mobile")
@@ -39,6 +37,7 @@ public class Employee {
     @Column(name = "EMail")
     private String email;
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "Password")
     private String password;
     @Column(name = "Status")

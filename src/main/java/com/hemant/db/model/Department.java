@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
-import com.hemant.db.validators.IsInteger;
 
 @Entity
 public class Department {
@@ -20,7 +19,6 @@ public class Department {
     @Column(name = "Address")
     private String address;
     @NotNull
-    @IsInteger
     @Max(value = 200)
     @Column(name = "Floor")
     private Integer floor;
@@ -54,19 +52,19 @@ public class Department {
         this.name = name;
     }
 
-    public String getaddress() {
+    public String getAddress() {
         return address;
     }
 
-    public void setaddress(String address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
-    public Integer getfloor() {
+    public Integer getFloor() {
         return floor;
     }
 
-    public void setfloor(Integer floor) {
+    public void setFloor(Integer floor) {
         this.floor = floor;
     }
     

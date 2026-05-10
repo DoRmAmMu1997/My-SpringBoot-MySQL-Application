@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
-import com.hemant.db.validators.IsInteger;
 
 @Entity
 public class Address {
@@ -27,11 +26,9 @@ public class Address {
 	private String state;
 	@Min(value = 100000)
 	@Max(value = 999999)
-	@IsInteger
 	@NotNull
 	@Column(name = "PIN")
 	private Integer pin;
-	@IsInteger
 	@Column(name = "Emp_ID")
 	private Integer empId;
 	@NotBlank

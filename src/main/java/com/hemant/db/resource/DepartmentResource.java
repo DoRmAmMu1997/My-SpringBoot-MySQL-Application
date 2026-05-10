@@ -1,81 +1,70 @@
 package com.hemant.db.resource;
 
-import com.hemant.db.model.Department;
-import com.hemant.db.repository.DepartmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hemant.db.model.Department;
+import com.hemant.db.service.DepartmentService;
+
+@Validated
 @RestController
 @RequestMapping(value = "/rest/Department")
 public class DepartmentResource {
+    private final DepartmentService departmentService;
 
-    @Autowired
-    DepartmentRepository DepartmentRepository;
+    public DepartmentResource(DepartmentService departmentService) {
+        this.departmentService = departmentService;
+    }
 
     @GetMapping(value = "/all")
     public List<Department> getAll() {
-        return DepartmentRepository.findAll();
+        return departmentService.getAllDepartments();
     }
 
     @PostMapping(value = "/insert")
-    public ResponseEntity<@Valid Department> persist(@Valid @RequestBody final Department Department) {
-	    DepartmentRepository.save(Department);
-	    return ResponseEntity.ok(Department);
+    public ResponseEntity<Department> persist(@Valid @RequestBody final Department department) {
+        return ResponseEntity.ok(departmentService.createDepartment(department));
     }
-    
+
     @GetMapping("/findbyname")
-    public List<Department> fetchDataByName(@Valid @RequestParam("name") String name){        
-        return DepartmentRepository.findByName(name);
+    public List<Department> fetchDataByName(@RequestParam("name") @NotBlank String name) {
+        return departmentService.findByName(name);
     }
-    
+
     @GetMapping("/findbyaddress")
-    public List<Department> fetchDataByAddress(@Valid @RequestParam("address") String address){        
-        return DepartmentRepository.findByAddress(address);
+    public List<Department> fetchDataByAddress(@RequestParam("address") @NotBlank String address) {
+        return departmentService.findByAddress(address);
     }
-    
+
     @PostMapping("/updatefloor")
-    public ResponseEntity<Department> updateFloor(@RequestParam("Id") Integer Id, @Valid @RequestParam("floor") Integer floor) {
-	    Department d = DepartmentRepository.findById(Id).get();
-	    d.setfloor(floor);
-	    DepartmentRepository.save(d);
-	    return ResponseEntity.ok(d);
+    public ResponseEntity<Department> updateFloor(
+            @RequestParam("Id") Integer id,
+            @RequestParam("floor") Integer floor) {
+        return ResponseEntity.ok(departmentService.updateFloor(id, floor));
     }
-    
+
     @PostMapping("/updateaddress")
-    public ResponseEntity<Department> updateAddress(@RequestParam("Id") Integer Id, @Valid @RequestParam("address") String address) {
-	    Department d = DepartmentRepository.findById(Id).get();
-	    d.setaddress(address);
-	    DepartmentRepository.save(d);
-	    return ResponseEntity.ok(d);
+    public ResponseEntity<Department> updateAddress(
+            @RequestParam("Id") Integer id,
+            @RequestParam("address") @NotBlank String address) {
+        return ResponseEntity.ok(departmentService.updateAddress(id, address));
     }
-    
+
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteDepartment(@RequestParam("Id") Integer Id){
-    	try {
-	    	DepartmentRepository.deleteById(Id);
-		return ResponseEntity.ok("Success");
-	} catch(Exception e) {
-	    	return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-    }
-    
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
+    public ResponseEntity<String> deleteDepartment(@RequestParam("Id") Integer id) {
+        departmentService.deleteDepartment(id);
+        return ResponseEntity.ok("Success");
     }
 }

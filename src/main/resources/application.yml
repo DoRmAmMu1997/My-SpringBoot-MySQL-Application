@@ -1,10 +1,14 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: "" #your user
-    url: jdbc:mysql://localhost:3306/Your_DB
-    username: "" #your password
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/employee_db}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
   jpa:
-    hibernate.ddl-auto: update
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
     generate-ddl: true
-    show-sql: true
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
